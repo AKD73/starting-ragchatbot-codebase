@@ -21,6 +21,30 @@ Requires `ANTHROPIC_API_KEY` in a `.env` file at the project root.
 
 On startup, FastAPI loads all `.txt`/`.pdf`/`.docx` files from `../docs` into ChromaDB, skipping any courses already indexed.
 
+## Running Tests
+
+Tests live in `backend/test_course_search_tool.py` and use `unittest.mock` to mock `VectorStore` — no live ChromaDB or API key needed.
+
+```bash
+# Run all tests
+cd backend && uv run pytest test_course_search_tool.py -v
+
+# Run a single test class or method
+cd backend && uv run pytest test_course_search_tool.py::TestExecuteErrors -v
+cd backend && uv run pytest test_course_search_tool.py::TestExecuteErrors::test_returns_error_message_from_store -v
+```
+
+## Key Configuration (`backend/config.py`)
+
+| Setting | Default | Notes |
+|---------|---------|-------|
+| `EMBEDDING_MODEL` | `sentence-transformers/all-MiniLM-L6-v2` | Downloaded locally on first run |
+| `CHUNK_SIZE` | 800 chars | ChromaDB content chunk size |
+| `CHUNK_OVERLAP` | 100 chars | Overlap between consecutive chunks |
+| `TOP_K_RESULTS` | 5 | Chunks returned per search |
+| `MAX_HISTORY` | 2 | Conversation exchanges kept in session |
+| `CHROMA_PATH` | `./chroma_db` | Persistent vector store path (relative to `backend/`) |
+
 ## Architecture
 
 This is a RAG chatbot where users ask questions about course documents. The backend is FastAPI + ChromaDB + Claude; the frontend is vanilla JS.
