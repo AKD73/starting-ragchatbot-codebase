@@ -1,6 +1,7 @@
 """Tests for CourseSearchTool.execute output evaluation."""
-import pytest
+
 from unittest.mock import MagicMock
+
 from search_tools import CourseSearchTool
 from vector_store import SearchResults
 
@@ -27,6 +28,7 @@ def make_store(documents=None, metadata=None, error=None):
 # Error path
 # ---------------------------------------------------------------------------
 
+
 class TestExecuteErrors:
     def test_returns_error_message_from_store(self):
         store = make_store(error="No course found matching 'Nonexistent'")
@@ -44,6 +46,7 @@ class TestExecuteErrors:
 # ---------------------------------------------------------------------------
 # Empty results
 # ---------------------------------------------------------------------------
+
 
 class TestExecuteEmpty:
     def test_no_results_no_filters(self):
@@ -78,6 +81,7 @@ class TestExecuteEmpty:
 # ---------------------------------------------------------------------------
 # Successful results — content formatting
 # ---------------------------------------------------------------------------
+
 
 class TestExecuteFormatting:
     def test_single_result_contains_document_text(self):
@@ -137,6 +141,7 @@ class TestExecuteFormatting:
 # Source tracking (last_sources)
 # ---------------------------------------------------------------------------
 
+
 class TestLastSources:
     def test_sources_populated_after_search(self):
         store = make_store(
@@ -189,6 +194,7 @@ class TestLastSources:
 # VectorStore call forwarding
 # ---------------------------------------------------------------------------
 
+
 class TestStoreCallForwarding:
     def test_passes_query_to_store(self):
         store = make_store(documents=[], metadata=[])
@@ -210,9 +216,7 @@ class TestStoreCallForwarding:
         store = make_store(documents=[], metadata=[])
         tool = CourseSearchTool(store)
         tool.execute(query="functions", lesson_number=4)
-        store.search.assert_called_once_with(
-            query="functions", course_name=None, lesson_number=4
-        )
+        store.search.assert_called_once_with(query="functions", course_name=None, lesson_number=4)
 
     def test_passes_all_filters_to_store(self):
         store = make_store(documents=[], metadata=[])
